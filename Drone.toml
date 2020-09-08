@@ -1,0 +1,33 @@
+[memory.flash]
+size = "1M"
+origin = 0x08000000
+
+[memory.ram]
+size = "320K"
+origin = 0x20000000
+
+[heap]
+size = "160K"
+pools = [
+    { block = "4", capacity = 1886 },
+    { block = "44", capacity = 424 },
+    { block = "268", capacity = 97 },
+    { block = "804", capacity = 39 },
+    { block = "1764", capacity = 17 },
+    { block = "3252", capacity = 8 },
+    { block = "5364", capacity = 3 },
+    { block = "8K", capacity = 1 },
+]
+
+[probe]
+gdb-client-command = "gdb-multiarch"
+
+[probe.openocd]
+command = "openocd"
+port = 3333
+arguments = ["-f", "interface/stlink.cfg", "-f", "target/stm32l4x.cfg"]
+
+[log.swo]
+reset-freq = 4000000
+baud-rate = 115200 
+#serial-endpoint = "/dev/ttyUSB0"
