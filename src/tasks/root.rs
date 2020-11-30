@@ -138,7 +138,7 @@ pub fn handler(reg: Regs, thr_init: ThrsInit) {
     // Exti configuration for the user button.
     let exti13 = ExtiDrv::init(ExtiSetup {
         exti: periph_exti13!(reg),
-        exti_int: thr.exti15_10,
+        exti_int: thr.exti_15_10,
         config: 0b0010, // PC13 pin.
         falling: false, // trigger the interrupt on a falling edge.
         rising: true,   // don't trigger the interrupt on a rising edge.
@@ -252,7 +252,7 @@ async fn listen(
     gpio_pins.output(3, true); // Start with red led ON.
 
     // Enable the interrupt for the user button.
-    thr.exti15_10.enable_int();
+    thr.exti_15_10.enable_int();
 
     // Counters
     let mut debounce_protection: i16 = 0;
@@ -268,8 +268,8 @@ async fn listen(
 
     'blinky: loop {
         let evt = select_biased! {
-            p = button_stream.next().fuse() => Event::Push,
-            t = tick_stream.next().fuse() => Event::Tick,
+            _p = button_stream.next().fuse() => Event::Push,
+            _t = tick_stream.next().fuse() => Event::Tick,
         };
         match evt {
             Event::Tick => {
@@ -305,7 +305,7 @@ async fn listen(
                 // contact bouncing and doubleclicks.
                 if doubleclick_protection > doubleclick_ival {
                     println!("--");
-                    thr.exti15_10.disable_int();
+                    thr.exti_15_10.disable_int();
                     debounce_protection = debounce_ival;
                 } else {
                     doubleclick_protection = 0;
